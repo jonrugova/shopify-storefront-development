@@ -1,0 +1,203 @@
+{{ 'tm-home.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign section_color = section.settings.color_scheme
+  assign primary_image = section.settings.primary_image
+  assign heading_id = 'tm-home-hero-heading-' | append: section.id
+-%}
+
+<section
+  class="tm-home-section"
+  data-color-scheme="{{ section_color }}"
+  aria-labelledby="{{ heading_id }}"
+>
+  <div class="tm-home-hero">
+    <div class="tm-home-hero__title">
+      {% if section.settings.eyebrow != blank %}
+        <span class="tm-home-kicker">{{ section.settings.eyebrow | escape }}</span>
+      {% endif %}
+      <h1 id="{{ heading_id }}" class="tm-home-hero__heading">
+        {{ section.settings.heading | escape }}
+      </h1>
+    </div>
+
+    {%comment %} Mobile CTA change code {%endcomment %}
+    {% if section.settings.primary_cta_text != blank or section.settings.secondary_cta_text != blank %}
+      <div class="tm-home-actions tm-home-actions--mobile">
+        {% if section.settings.primary_cta_text != blank %}
+          {% if section.settings.primary_cta_link != blank %}
+            <a class="tm-home-action" href="{{ section.settings.primary_cta_link }}">
+              {{ section.settings.primary_cta_text | escape }}
+            </a>
+          {% else %}
+            <span class="tm-home-action">{{ section.settings.primary_cta_text | escape }}</span>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.secondary_cta_text != blank %}
+          {% if section.settings.secondary_cta_link != blank %}
+            <a class="tm-home-action" href="{{ section.settings.secondary_cta_link }}">
+              {{ section.settings.secondary_cta_text | escape }}
+            </a>
+          {% else %}
+            <span class="tm-home-action">{{ section.settings.secondary_cta_text | escape }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="tm-home-hero__media-stack">
+      <div class="tm-home-hero__primary-media">
+        {% if primary_image != blank %}
+          {% if section.settings.image_link != blank %}
+            <a href="{{ section.settings.image_link }}" class="tm-home-hero__image-link">
+              {% render 'image',
+                image: primary_image,
+                sizes: '(min-width: 1024px) 38vw, 86vw',
+                preload: true
+              %}
+            </a>
+          {% else %}
+            {% render 'image',
+              image: primary_image,
+              sizes: '(min-width: 1024px) 38vw, 86vw',
+              preload: true
+            %}
+          {% endif %}
+        {% else %}
+          <div
+            class="tm-home-placeholder"
+            role="img"
+            aria-label="{{ section.settings.media_label | escape }}"
+          >
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="tm-home-hero__support">
+      {% if section.settings.supporting_copy != blank %}
+        <div class="tm-home-hero__support-copy rte">
+          {{ section.settings.supporting_copy }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.primary_cta_text != blank or section.settings.secondary_cta_text != blank %}
+        <div class="tm-home-actions tm-home-actions--desktop">
+          {% if section.settings.primary_cta_text != blank %}
+            {% if section.settings.primary_cta_link != blank %}
+              <a class="tm-home-action" href="{{ section.settings.primary_cta_link }}">
+                {{ section.settings.primary_cta_text | escape }}
+              </a>
+            {% else %}
+              <span class="tm-home-action">{{ section.settings.primary_cta_text | escape }}</span>
+            {% endif %}
+          {% endif %}
+
+          {% if section.settings.secondary_cta_text != blank %}
+            {% if section.settings.secondary_cta_link != blank %}
+              <a class="tm-home-action" href="{{ section.settings.secondary_cta_link }}">
+                {{ section.settings.secondary_cta_text | escape }}
+              </a>
+            {% else %}
+              <span class="tm-home-action">{{ section.settings.secondary_cta_text | escape }}</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TM home hero",
+  "class": "tm-home-hero-section",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Teuta Matoshi · Prishtina"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The one you dreamed about. Made for you."
+    },
+    {
+      "type": "richtext",
+      "id": "supporting_copy",
+      "label": "Supporting copy",
+      "default": "<p>Colour, corsetry, tulle and embroidered detail—imagined by Teuta and made one at a time after you choose it.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use one exceptional full-silhouette dress-form image. Keep the full hem or train visible; do not use a model or customer photograph here."
+    },
+    {
+      "type": "image_picker",
+      "id": "primary_image",
+      "label": "Hero dress-form image"
+    },
+    {
+      "type": "url",
+      "id": "image_link",
+      "label": "Hero image link"
+    },
+    {
+      "type": "text",
+      "id": "media_label",
+      "label": "Placeholder image description",
+      "default": "A full-length Teuta Matoshi dress presented on an atelier form"
+    },
+    {
+      "type": "header",
+      "content": "Calls to action"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_text",
+      "label": "Primary label",
+      "default": "Discover the collection"
+    },
+    {
+      "type": "url",
+      "id": "primary_cta_link",
+      "label": "Primary link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary label",
+      "default": "How yours is made"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TM home hero",
+      "category": "Teuta Matoshi"
+    }
+  ]
+}
+{% endschema %}
