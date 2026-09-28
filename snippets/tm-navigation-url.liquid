@@ -1,0 +1,20 @@
+{%- doc -%}
+  Returns a theme-scoped navigation URL.
+
+  The store navigation remains shared with the live theme until launch, so the
+  legacy Sizing page URL is rendered with the redesigned alternate template in
+  this unpublished theme only.
+
+  @param {string} url - The Shopify navigation link URL.
+{%- enddoc -%}
+
+{%- liquid
+  assign destination = url
+  assign sizing_guide_path = routes.root_url | append: 'pages/guide-page'
+
+  if url == '/pages/guide-page' or url == sizing_guide_path
+    assign destination = sizing_guide_path | append: '?view=tm-sizing'
+  endif
+
+  echo destination
+-%}
